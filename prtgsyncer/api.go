@@ -41,6 +41,13 @@ func (s *Syncer) Sync(ctx context.Context, v interface{}) (*SyncResult, error) {
 		if device == nil {
 			return nil, fmt.Errorf("Created device %s, but no device was found when getting it from the API", deviceName)
 		}
+
+		if s.UnpauseDeviceAfterCreation {
+			err = s.Client.Devices().Unpause(ctx, device.ID)
+			if err != nil {
+				return nil, fmt.Errorf("Error while unpausing device %s: %v", deviceName, err)
+			}
+		}
 	}
 
 	// Compare hostname and update if necessary

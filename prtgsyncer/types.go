@@ -47,12 +47,12 @@ Example for a kubernetes ingress object:
 	}
 */
 type Syncer struct {
-	Client *prtgapi.Client
-
-	TemplateDeviceID int64
-	ParentGroupID    int64
-
+	Client    *prtgapi.Client
 	TagPrefix string
+
+	TemplateDeviceID           int64
+	ParentGroupID              int64
+	UnpauseDeviceAfterCreation bool
 
 	Condition              func(interface{}) bool
 	DeviceNameGetter       func(interface{}) string
@@ -117,6 +117,7 @@ func (r *SyncResult) IsChanged() bool {
 	return false
 }
 
+// IsIgnored returns if the device is ignored because of a condition failure
 func (r *SyncResult) IsIgnored() bool {
 	return r.ConditionFailed
 }
